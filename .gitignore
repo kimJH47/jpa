@@ -2,7 +2,7 @@ HELP.md
 .gradle
 pom.xml
 .idea/**
-
+target/**
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
