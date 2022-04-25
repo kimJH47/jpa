@@ -18,12 +18,14 @@ public class JpaMain {
             Member b = new Member(160L, "b");
             em.persist(a);
             em.persist(b);
+            transaction.commit();
 
         } catch (Exception e) {
             transaction.rollback();
+        }finally {
+            emf.close();
+            em.close();
         }
-        emf.close();
-        em.close();
     }
 }
 
@@ -48,4 +50,10 @@ public class JpaMain {
  * DB에서가 아닌 어플리케이션 차원에서 제공
  * <p>
  * 3. 트랜잭션을 지원하는 쓰기지연(LAZY) : 데이터변경은 트랜잭션 커밋을 하는 순간(실제 쿼리가 날라감)에 이뤄진다. 쓰기지연 SQL 저장소 이용
+ *
+ * 4. 변경감지(dirty checking) : 영속상태의 엔티티의 데이터 변경 시 따로 업데이트 쿼리 없이 트랜잭션 커밋을 하면 jpa 가 업데이트 쿼리를 날려준다.
+ * 커밋시 내부적으로 flush() 가 실행되는데 이때 1차캐시에 존재하는 엔티티 스냅샷(최초로 영속성 컨텍스트에 저장된 시점)과 앤티티를 비교한다. 이때 변경이 감지되면
+ * 쓰기지연SQL 저장소에 업데이트 쿼리 저장 후 flush, 커밋된다.
+ *
+ * 5.엔티티 삭제
  */
