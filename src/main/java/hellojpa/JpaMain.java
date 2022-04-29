@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -14,12 +13,8 @@ public class JpaMain {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
-            Member a = new Member(150L, "A");
-            Member b = new Member(160L, "b");
-            em.persist(a);
-            em.persist(b);
-            em.detach(b);
-            em.close();
+
+
             transaction.commit();
 
         } catch (Exception e) {
