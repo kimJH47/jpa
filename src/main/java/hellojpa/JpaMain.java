@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -13,6 +14,24 @@ public class JpaMain {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
+
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+            User user = new User();
+            user.setName("user1");
+            user.changeTeam(team);
+            em.persist(user);
+
+            em.flush();
+            em.clear();
+            User user1 = em.find(User.class, 1L);
+            List<User> users = user1.getTeam()
+                                    .getUsers();
+
+            for (User user2 : users) {
+                System.out.println("user2 = " + user2.getName());
+            }
 
 
             transaction.commit();

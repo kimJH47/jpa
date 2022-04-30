@@ -24,28 +24,17 @@ public class User {
     @Column(nullable = false, length = 10)
     private String name;
 
-    private Integer age;
+    @ManyToOne
+    private Team team;
 
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType;
-
-
-    private LocalDateTime createDate;
-
-
-    private LocalDateTime lastModifiedDate;
-
-    @Lob
-    private String description;
-
-    public User(Long id, String name) {
-
-        this.id = id;
-        this.name = name;
+    public Team getTeam() {
+        return team;
     }
 
-    public User() {
-
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getUsers()
+            .add(this);
     }
 
     public Long getId() {
@@ -56,46 +45,6 @@ public class User {
         this.id = id;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public RoleType getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getName() {
         return name;
     }
@@ -103,6 +52,12 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public User() {
+
+    }
+
+
 }
 
 
