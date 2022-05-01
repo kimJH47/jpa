@@ -1,9 +1,14 @@
 package hellojpa;
 
+import hellojpa.domain.Item;
+import hellojpa.domain.Movie;
+import org.hibernate.Hibernate;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.rmi.MarshalledObject;
 import java.util.List;
 
 public class JpaMain {
@@ -14,25 +19,23 @@ public class JpaMain {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
+            Movie movie = new Movie();
 
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
-            User user = new User();
-            user.setName("user1");
-            user.changeTeam(team);
-            em.persist(user);
-
+            movie.setDirector("A");
+            movie.setName("movie");
+            movie.setPrice(10000);
+            movie.setStockQuantity(10);
+            em.persist(movie);
             em.flush();
             em.clear();
-            User user1 = em.find(User.class, 1L);
-            List<User> users = user1.getTeam()
-                                    .getUsers();
 
-            for (User user2 : users) {
-                System.out.println("user2 = " + user2.getName());
-            }
-
+            Movie movie1 = em.getReference(Movie.class, 1L);
+            System.out.println("is loaded : " + emf.getPersistenceUnitUtil().isLoaded(movie1)); //프록시 초기화확인
+            Hibernate.initialize(movie1); //강제초기화
+            Movie movie2 = em.find(Movie.class, 1l);
+            System.out.println("is loaded : " + emf.getPersistenceUnitUtil().isLoaded(movie1));
+            System.out.println(movie1==movie2);
+            System.out.println(movie1 instanceof Item);
 
             transaction.commit();
 
@@ -96,3 +99,12 @@ public class JpaMain {
  *  - em.clear() : 영속성 컨텍스트 초기화
  *  - em.close() : 영속성 컨텍스트 종료
 * */
+
+
+/**
+ * 프록시객체는 처음 사용할 때 한번만 초기화
+ * 객체초기화시 프록시 객체를 통해 실제 엔티티에 접근가능, 프록시객체는 원본 엔티티를 상속받기 때문에 타입 체크시 주의해야함(instanceOf 사용, ==는 상속간의 비교가안됨)
+ * 만약 영속성컨텍스트에 엔티티가 있는 상태에서 reference()가 호출되면 프록시가아닌 엔티티 원본을 반환,jpa는 같은 트랜잭션에서는 같은 pk를 가지는 엔티티는 동일성을
+ * 보장해야 하기 때문에(참조값 ==비교시 항상 true) 원본을 반환한다. 만약 reference()가 호출되어 프록시객체가 먼저 반환 되었으면 다음 find() 조회할때도 프록시겍체를 한다.
+ * 프록시는 영속성컨텍스트를 통해 엔티티를 요청하기 때문에 준영속상태 일때는 예외가 발생한다.
+ */
