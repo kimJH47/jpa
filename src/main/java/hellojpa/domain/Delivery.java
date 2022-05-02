@@ -14,7 +14,7 @@ public class Delivery {
     private String zipcode;
     private DeliveryStatus deliveryStatus;
 
-    @OneToOne(mappedBy = "delivery")
+    @One+((mappedBy = "delivery",fetch = FetchType.LAZY)
     private Order order;
 
 

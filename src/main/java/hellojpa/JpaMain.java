@@ -30,7 +30,7 @@ public class JpaMain {
             em.clear();
 
             Movie movie1 = em.getReference(Movie.class, 1L);
-            System.out.println("is loaded : " + emf.getPersistenceUnitUtil().isLoaded(movie1)); //프록시 초기화확인
+            System.out.println("is loaded : " + emf.getPersistenceUnitUtil().isLoaded(movie1)); //프록시 초기화
             Hibernate.initialize(movie1); //강제초기화
             Movie movie2 = em.find(Movie.class, 1l);
             System.out.println("is loaded : " + emf.getPersistenceUnitUtil().isLoaded(movie1));
@@ -107,4 +107,9 @@ public class JpaMain {
  * 만약 영속성컨텍스트에 엔티티가 있는 상태에서 reference()가 호출되면 프록시가아닌 엔티티 원본을 반환,jpa는 같은 트랜잭션에서는 같은 pk를 가지는 엔티티는 동일성을
  * 보장해야 하기 때문에(참조값 ==비교시 항상 true) 원본을 반환한다. 만약 reference()가 호출되어 프록시객체가 먼저 반환 되었으면 다음 find() 조회할때도 프록시겍체를 한다.
  * 프록시는 영속성컨텍스트를 통해 엔티티를 요청하기 때문에 준영속상태 일때는 예외가 발생한다.
+ *
+ * cascade.ALL 사용시 주의점 : 부모엔티티와 자식엔티티 라이프사이클이 유사할때 사용, 자식엔티티에 대해 소유자가 하나일때 사용해야함
+ * 고아객체 : orphanRemoval=true 사용시 부모엔티티와의 관계가 끊어진 자식엔티티(참조가 되지않는 엔티티)는 delete 쿼리로 자동 삭제된다(부도엔티티가 삭제되면 자식도삭제_)
+ * . 참조하는 곳이 하나일 때
+ * 사용해야함, 특정 엔티티가 개인 소유할 때 사용
  */
