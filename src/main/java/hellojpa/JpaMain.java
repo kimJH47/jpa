@@ -29,18 +29,7 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            List<Delivery> resultList1 = em.createQuery("select d from Delivery d left join d.order o on o.count>:count", Delivery.class)
-                                           //.setParameter("status", DeliveryStatus.SUC)
-                                           .setParameter("count", 20)
-                                           .getResultList();
-            System.out.println("========");
-/*
-            System.out.println(resultList1.size());
-            Delivery x = resultList1.get(0);
-            System.out.println(x.getDeliveryStatus());
-            System.out.println(x.getOrder().getCount());
-            System.out.println(x);
-*/
+
 
 
             transaction.commit();
@@ -312,6 +301,9 @@ public class JpaMain {
  * 세타조인 : select count(m) from Member m, Team t where m.username =t.username //연관관계가 없을 때 사용가능
  *
  * ON 절
- * 조안 대상 필터링
+ * 조인 대상 필터링
  * 연관관계 없는 엔티티 외부조인
+ *
+ * 서브쿼리
+ * from 절의 서비쿼리는 현재 jpql에서 사용불가능, 조인으로 풀 수 있으면 풀어서 해결
  */
